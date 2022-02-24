@@ -3,6 +3,8 @@ import { ProductImage } from '../components/ProductImage';
 import { ProductTitle } from '../components/ProductTitle';
 import { ProductButton } from '../components/ProductsButtons';
 
+import '../styles/custom-styles.css';
+
 const product = {
     id: '1',
     title: 'Coffe Mug card',
@@ -24,8 +26,10 @@ export const ShoppingPage = () => (
                 <ProductCard.Buttons />
             </ProductCard>
             
-            <ProductCard product={product}>
-                <ProductImage />
+            <ProductCard product={product}
+                className="bg-dark color"
+            >
+                <ProductImage style={{padding: '20px'}}/>
                 <ProductTitle title='esste es un titulssso' />
                 <ProductButton />
             </ProductCard>
