@@ -7,3 +7,10 @@
 .color {
     color: cadetblue;
 }
+
+
+.shopping-cart {
+    position: fixed;
+    right: 10px;
+    top: 0;
+}
