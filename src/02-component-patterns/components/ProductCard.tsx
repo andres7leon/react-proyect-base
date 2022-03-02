@@ -1,29 +1,51 @@
-import styles from "../styles/styles.module.css"
-import { useProduct } from '../hooks/useProduct';
-import { createContext } from "react";
-import { ProductCardProps, ProductContextProps } from '../interfaces/interfaces';
-import { ProductTitle } from './ProductTitle';
-import { ProductImage } from './ProductImage';
-import { ProductButton } from './ProductsButtons';
+import { createContext } from 'react';
 
-export const ProductContext = createContext( {} as ProductContextProps );
+import { useProduct } from '../hooks/useProduct';
+import { ProductContextProps, Product, onChangeArgs, InitialValue, ProductCardHandlers } from '../interfaces/interfaces';
+
+import styles from '../styles/styles.module.css'
+
+export const ProductContext = createContext({} as ProductContextProps);
 const { Provider } = ProductContext;
 
-export const ProductCard = ({ children, product, className, style, onChanges, value }: ProductCardProps) => {
-
-   const {counter, increaseBy} = useProduct( { onChanges, product, value } )
 
 
-  return (
-    <Provider value={{counter, increaseBy, product}}>
-        <div style={style} className={ `${styles.productCard} ${className}` }>
-            { children }
-        </div>
-    </Provider>
-  )
+export interface Props {
+    product: Product;
+    // children?: React.ReactElement | React.ReactElement[];
+    children: ( args: ProductCardHandlers) => JSX.Element;
+    className?: string;
+    style?: React.CSSProperties;
+    onChange?: ( args: onChangeArgs ) => void;
+    value?: number;
+    initialValues?: InitialValue
 }
 
 
-ProductCard.Title = ProductTitle;
-ProductCard.Image = ProductImage;
-ProductCard.Buttons = ProductButton;
+export const ProductCard = ({ children, product, className, style, onChange, value, initialValues }: Props ) => {
+
+    const { counter, increaseBy, maxCount, isMaxCountReached, reset } = useProduct({ onChange, product, value, initialValues });
+
+    return (
+        <Provider value={{
+            counter,
+            increaseBy,
+            product,
+            maxCount
+        }}>
+            <div 
+                className={ `${ styles.productCard } ${ className }` }
+                style={ style }
+            >
+                { children({
+                   count: counter,
+                   isMaxCountReached,
+                   maxCount: initialValues?.maxCount,
+                   product,
+                   increaseBy,
+                   reset
+                }) }
+            </div>
+        </Provider>
+    )
+}
